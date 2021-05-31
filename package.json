@@ -28,8 +28,8 @@
     "webpack-cli": "^4.7.0"
   },
   "scripts": {
-    "start": "nodemon ---exec babel-node server.js --ignore public/" ,
-    "dev": "webpack-wd"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [
     "Quiz",

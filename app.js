@@ -114,6 +114,7 @@ app.get('/blog', (req,res) => {
     });
 });
 
-app.listen(port,hostname,() => {
+
+app.listen(port, () => {
     console.log("server is listening at port ", port);
 });
