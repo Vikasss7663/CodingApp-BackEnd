@@ -170,7 +170,7 @@ app.get('/problem', (req, res) => {
 });
 
 app.listen(port, () => {
-    exec("apt install default-jdk", (error, stdout, stderr) => {
+    exec("sudo mount -o remount,rw /", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
