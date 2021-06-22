@@ -1,0 +1,6 @@
+name = input()
+age = int(input())
+print("your name is ")
+print(name)
+print("and your age is ")
+print(age)
