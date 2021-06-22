@@ -170,7 +170,7 @@ app.get('/problem', (req, res) => {
 });
 
 app.listen(port, () => {
-    exec("apt install default-jre ", (error, stdout, stderr) => {
+    exec("sudo apt install default-jdk", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
