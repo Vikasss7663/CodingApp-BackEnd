@@ -42,8 +42,199 @@ app.get('/blog', (req, res) => {
     });
 });
 
+app.get('/problem', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const tag = "%" + req.query.tag + "%";
+        const sql = "SELECT * FROM problembase WHERE problemTags LIKE ?";
+        conn.query(sql,(tag),(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/createProblem', (req, res) => {
+    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+});
+app.post('/createProblem', (req, res) => {
+
+    insertData = null
+
+    insertData = {
+        problemId : Number(req.body.id),
+        problemTitle : req.body.title,
+        problemDetail : req.body.detail,
+        problemTags : req.body.tag
+    }
+
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+        }
+        sqlQuery = "insert into problembase SET ?";
+        conn.query(sqlQuery , insertData ,(err,results,fields) => {
+            conn.release;
+            if(err) {
+                console.log("Some error occurred");
+            }
+            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+        });
+    }); 
+});
+
+app.get('/code', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const problemId = req.query.problemId;
+        const sql = "SELECT * FROM codebase WHERE problemId = ?";
+        conn.query(sql,(problemId),(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/createCode', (req,res) => {
+    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+});
+app.post('/createCode', (req, res) => {
+
+    insertData = null
+
+    insertData = {
+        codeId : Number(req.body.codeid),
+        problemId : Number(req.body.problemid),
+        codeTitle : req.body.title,
+        codeDetail : req.body.detail,
+        codeCode : req.body.code,
+        codeLang : req.body.lang
+    }
+
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+        }
+        sqlQuery = "insert into codebase SET ?";
+        conn.query(sqlQuery , insertData ,(err,results,fields) => {
+            conn.release;
+            if(err) {
+                console.log("Some error occurred");
+            }
+            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+        });
+    }); 
+});
+
+app.listen(port, () => {
+    console.log("server is listening at port ", port);
+});
+
+
+
+app.get('/createQuestion',(req,res) => {
+    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_question.html");
+});
+app.post('/createQuestion',(req,res) => {
+
+    insertData = null
+
+    insertData = {
+        question : req.body.question,
+        optiona : req.body.optiona,
+        optionb : req.body.optionb,
+        optionc : req.body.optionc,
+        optiond : req.body.optiond,
+        answer : req.body.answer,
+        tags : req.body.tag,
+        explanation : req.body.explanation
+    }
+
+    var tagData = "";
+    var text = insertData.tags.split(",");
+    for(var i=0;i<text.length;i++) {
+        text[i] = text[i].trim().toLowerCase();
+        tagData += "#" + text[i] + " ";
+    }
+    if(tagData.length > 1) insertData.tags = tagData.substring(0,tagData.length-1);
+    else insertData.tags = "default"
+
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log(err);
+            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
+        }
+        sqlQuery = "insert into question SET ?";
+        conn.query(sqlQuery , insertData ,(err,results,fields) => {
+            conn.release;
+            if(err) {
+                console.log(err);
+            }
+            var questionid = results.insertId
+
+            var quesByTag = []
+            for(var i=0;i<text.length;i++) {
+                quesByTag.push([text[i],questionid]);
+            }
+
+            var tagSql = "insert into quesbytag (tagname,questionid) values ?";
+            conn.query(tagSql , [quesByTag] ,(err,results,fields) => {
+                if(err) {
+                    console.log(err);
+                }
+            });
+ 
+            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
+        });
+    }); 
+}); 
+
+/*
+app.get('/quiz',(req,res) => {
+    pool.getConnection((err,conn) => { 
+        if(err) throw err;
+        var quizSql = "select distinct tagname,count(tagname) as count from quesbytag group by tagname";
+        conn.query(quizSql,(err,results,fields) => {
+            conn.release; 
+            if(err) res.send(null);  
+            else res.send(results);    
+            res.end();   
+        }); 
+    }); 
+}) 
+app.get('/question',(req,res) => {
+    var tag = req.query.tag
+    pool.getConnection((err,conn) => { 
+        if(err) throw err;
+        var quesSql = "select * from question,quesbytag where quesbytag.tagname = ? AND quesbytag.questionid = question.questionid";
+        conn.query(quesSql,tag,(err,results,fields) => {
+            conn.release;  
+            if(err) throw err; 
+            res.send(results);    
+            res.end();   
+        }); 
+    }); 
+});
+
 app.get('/run', (req, res) => {
-    console.log("Running");
     const lang = req.query.lang;
     const userId = req.query.userId;
     const code = req.query.code;
@@ -148,130 +339,4 @@ function compileCode(lang,userId,s,res) {
     }
 }
 
-app.get('/problem', (req, res) => {
-    pool.getConnection((err,conn) => {
-        if(err) {
-            console.log("Some error occurred");
-            res.send(null);
-            res.end();
-            return;
-        }
-        const tag = "%" + req.query.tag + "%";
-        const sql = "SELECT * FROM problembase WHERE problemTags LIKE ?";
-        conn.query(sql,(tag),(err,results,fields) => {
-            if(err) {
-                res.send(err);
-            } else {
-                res.send(results);
-            }
-            res.end();
-        })
-    });
-});
-
-app.listen(port, () => {
-    exec("sudo mount -o remount,rw /", (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
-    exec("apt-get install default-jdk", (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
-    console.log("server is listening at port ", port);
-});
-
-
-/*
-app.get('/create',(req,res) => {
-    res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
-});
-app.post('/create',(req,res) => {
-
-    insertData = null
-
-    insertData = {
-        question : req.body.question,
-        optiona : req.body.optiona,
-        optionb : req.body.optionb,
-        optionc : req.body.optionc,
-        optiond : req.body.optiond,
-        answer : req.body.answer,
-        tags : req.body.tag,
-        explanation : req.body.explanation
-    }
-
-    var tagData = "";
-    var text = insertData.tags.split(",");
-    for(var i=0;i<text.length;i++) {
-        text[i] = text[i].trim().toLowerCase();
-        tagData += "#" + text[i] + " ";
-    }
-    if(tagData.length > 1) insertData.tags = tagData.substring(0,tagData.length-1);
-    else insertData.tags = "default"
-
-    pool.getConnection((err,conn) => {
-        if(err) {
-            console.log("Some error occurred");
-            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
-        }
-        sqlQuery = "insert into question SET ?";
-        conn.query(sqlQuery , insertData ,(err,results,fields) => {
-            conn.release;
-            if(err) throw err;
-            var questionid = results.insertId
-
-            var quesByTag = []
-            for(var i=0;i<text.length;i++) {
-                quesByTag.push([text[i],questionid]);
-            }
-
-            var tagSql = "insert into quesbytag (tagname,questionid) values ?";
-            conn.query(tagSql , [quesByTag] ,(err,results,fields) => {
-                if(err) throw err;
-            });
- 
-            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
-        });
-    }); 
-}); 
-app.get('/quiz',(req,res) => {
-    pool.getConnection((err,conn) => { 
-        if(err) throw err;
-        var quizSql = "select distinct tagname,count(tagname) as count from quesbytag group by tagname";
-        conn.query(quizSql,(err,results,fields) => {
-            conn.release; 
-            if(err) res.send(null);  
-            else res.send(results);    
-            res.end();   
-        }); 
-    }); 
-}) 
-app.get('/question',(req,res) => {
-    var tag = req.query.tag
-    pool.getConnection((err,conn) => { 
-        if(err) throw err;
-        var quesSql = "select * from question,quesbytag where quesbytag.tagname = ? AND quesbytag.questionid = question.questionid";
-        conn.query(quesSql,tag,(err,results,fields) => {
-            conn.release;  
-            if(err) throw err; 
-            res.send(results);    
-            res.end();   
-        }); 
-    }); 
-});
 */
