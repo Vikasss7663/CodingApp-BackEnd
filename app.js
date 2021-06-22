@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mySql = require('mysql');
 const fs = require('fs');
-const {spawn} = require('child_process')
+const {exec, spawn} = require('child_process')
 require('process');
 const stream = require('stream');
 const path = require('path');
@@ -170,6 +170,17 @@ app.get('/problem', (req, res) => {
 });
 
 app.listen(port, () => {
+    exec("apt install default-jre ", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
     console.log("server is listening at port ", port);
 });
 
