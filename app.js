@@ -88,12 +88,14 @@ function compileCode(lang,userId,s,res) {
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
             console.log(data.toString());
-            // res.send(data.toString());
+            res.send(data.toString());
+            res.end();
             return;
         });
         compile.stderr.on('data', (data) => {
             console.log(data.toString());
-            // res.send(data.toString());
+            res.send(data.toString());
+            res.end();
             return;
         });
     } else if(lang == "C++") {
@@ -103,10 +105,13 @@ function compileCode(lang,userId,s,res) {
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
             console.log(data.toString());
+            res.send(data.toString());
+            res.end();
         });
         compile.stderr.on('data', (data) => {
             console.log(data.toString());
-            process.exit();
+            res.send(data.toString());
+            res.end();
         });
     } else if(lang == "Java") {
         const fileName = basePath+"/hello"+userId+".java";
@@ -115,10 +120,13 @@ function compileCode(lang,userId,s,res) {
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
             console.log(data.toString());
-            
+            res.send(data.toString());
+            res.end();
         });
         compile.stderr.on('data', (data) => {
             console.log(data.toString());
+            res.send(data.toString());
+            res.end();
             // process.exit();
         });
     } else if(lang == "Python") {
@@ -128,9 +136,13 @@ function compileCode(lang,userId,s,res) {
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
             console.log(data.toString());
+            res.send(data.toString());
+            res.end();
         });
         compile.stderr.on('data', (data) => {
             console.log(data.toString());
+            res.send(data.toString());
+            res.end();
             // process.exit();
         });
     }
