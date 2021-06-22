@@ -100,7 +100,7 @@ app.get('/code', (req, res) => {
             res.end();
             return;
         }
-        const problemId = req.query.problemId;
+        const problemId = Number(req.query.problemId);
         const sql = "SELECT * FROM codebase WHERE problemId = ?";
         conn.query(sql,(problemId),(err,results,fields) => {
             if(err) {
