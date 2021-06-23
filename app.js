@@ -69,6 +69,8 @@ app.get('/createProblem', (req, res) => {
 });
 app.post('/createProblem', (req, res) => {
 
+    const filePath = path.join(currPath, "form_problem.html");
+
     insertData = null
 
     insertData = {
@@ -81,7 +83,7 @@ app.post('/createProblem', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
-            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+            res.sendFile(filePath);
         }
         sqlQuery = "insert into problembase SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
@@ -89,7 +91,7 @@ app.post('/createProblem', (req, res) => {
             if(err) {
                 console.log("Some error occurred");
             }
-            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+            res.sendFile(filePath);
         });
     }); 
 });
@@ -120,6 +122,8 @@ app.get('/createCode', (req,res) => {
 });
 app.post('/createCode', (req, res) => {
 
+    const filePath = path.join(currPath, "form_code.html");
+    
     insertData = null
 
     insertData = {
@@ -134,7 +138,7 @@ app.post('/createCode', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
-            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+            res.sendFile(filePath);
         }
         sqlQuery = "insert into codebase SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
@@ -142,7 +146,7 @@ app.post('/createCode', (req, res) => {
             if(err) {
                 console.log("Some error occurred");
             }
-            res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+            res.sendFile(filePath);
         });
     }); 
 });
@@ -158,6 +162,8 @@ app.get('/createQuestion',(req,res) => {
     res.sendFile(filePath);
 });
 app.post('/createQuestion',(req,res) => {
+
+    const filePath = path.join(currPath, "form_question.html");
 
     insertData = null
 
@@ -184,7 +190,7 @@ app.post('/createQuestion',(req,res) => {
     pool.getConnection((err,conn) => {
         if(err) {
             console.log(err);
-            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
+            res.sendFile(filePath);
         }
         sqlQuery = "insert into question SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
@@ -205,8 +211,7 @@ app.post('/createQuestion',(req,res) => {
                     console.log(err);
                 }
             });
- 
-            res.sendFile("C:/Users/visha/OneDrive/Documents/Quiz/public/form.html");
+            res.sendFile(filePath);
         });
     }); 
 }); 
