@@ -6,6 +6,7 @@ const {exec, spawn} = require('child_process')
 require('process');
 const stream = require('stream');
 const path = require('path');
+const currPath = path.join(__dirname);
 
 const port = process.env.PORT || 5500;
 const app = express(); 
@@ -63,7 +64,8 @@ app.get('/problem', (req, res) => {
     });
 });
 app.get('/createProblem', (req, res) => {
-    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_problem.html");
+    const filePath = path.join(currPath, "form_problem.html");
+    res.sendFile(filePath);
 });
 app.post('/createProblem', (req, res) => {
 
@@ -102,7 +104,7 @@ app.get('/code', (req, res) => {
         }
         const problemId = Number(req.query.problemId);
         const sql = "SELECT * FROM codebase WHERE problemId = ?";
-        conn.query(sql,(problemId),(err,results,fields) => {
+        conn.query(sql,problemId,(err,results,fields) => {
             if(err) {
                 res.send(err);
             } else {
@@ -113,7 +115,8 @@ app.get('/code', (req, res) => {
     });
 });
 app.get('/createCode', (req,res) => {
-    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_code.html");
+    const filePath = path.join(currPath, "form_code.html");
+    res.sendFile(filePath);
 });
 app.post('/createCode', (req, res) => {
 
@@ -151,7 +154,8 @@ app.listen(port, () => {
 
 
 app.get('/createQuestion',(req,res) => {
-    res.sendFile("C:/Users/visha/OneDrive/Desktop/Quiz App/form_question.html");
+    const filePath = path.join(currPath, "form_question.html");
+    res.sendFile(filePath);
 });
 app.post('/createQuestion',(req,res) => {
 
