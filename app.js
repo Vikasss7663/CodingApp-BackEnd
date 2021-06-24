@@ -393,14 +393,12 @@ app.listen(port, () => {
     console.log("server is listening at port ", port);
 });
 
-/*
-
-app.get('/run', (req, res) => {
-    const lang = req.query.lang;
-    const userId = req.query.userId;
-    const code = req.query.code;
+app.post('/run', (req, res) => {
+    const lang = req.body.lang;
+    const userId = req.body.userId;
+    const code = req.body.code;
     console.log(code);
-    const input = req.query.input;
+    const input = req.body.input;
     const ext = getExtension(lang);
     const fileName = basePath+"/hello"+userId+ext;
     try {
@@ -499,5 +497,3 @@ function compileCode(lang,userId,s,res) {
         });
     }
 }
-
-*/
