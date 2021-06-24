@@ -24,43 +24,22 @@
     </div>
   </nav>
 
-    <form class="card container my-2 col-md-12 col-lg-6" action='/createQuestion' method="POST">
+    <form class="card container my-2 col-md-12 col-lg-6" action='/createBlog' method="POST">
         <div class="form-group">
-            <label for="question">Enter your Question here<span class="text-primary"> *</span></label>
-            <textarea class="form-control" id="question" name="question" rows="3"></textarea>
-          </div>
-        <div class="form-group">
-          <label for="optiona">Option A<span class="text-primary"> *</span></label>
-          <input type="text" class="form-control" name="optiona" id="optiona" placeholder="Option A">
-        </div>
-        <div class="form-group">
-            <label for="optionb">Option B<span class="text-primary"> *</span></label>
-            <input type="text" class="form-control" name="optionb" id="optionb" placeholder="Option B">
-          </div>
-          <div class="form-group">
-            <label for="optionc">Option C</label>
-            <input type="text" class="form-control" id="optionc" name="optionc" placeholder="Option C">
-          </div>
-          <div class="form-group">
-            <label for="optiond">Option D</label>
-            <input type="text" class="form-control" id="optiond" name="optiond" placeholder="Option D">
+            <label for="title">Enter title<span class="text-primary"> *</span></label>
+            <textarea class="form-control" id="title" name="title" rows="3"></textarea>
           </div>
         <div class="form-group">
-            <label for="answer">Correct Answer<span class="text-primary"> *</span></label>
-            <select class="form-control" id="answer" name="answer">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-            </select>
-          </div>
-          <div class="form-group">
+            <label for="detail">Enter detail</label>
+            <textarea class="form-control" id="detail" name="detail" rows="3"></textarea>
+         </div>
+        <div class="form-group">
+            <label for="url">Enter Url</label>
+            <textarea class="form-control" id="url" name="url" rows="2"></textarea>
+         </div>
+         <div class="form-group">
             <label for="tag">Enter Tag</label>
             <textarea class="form-control" id="tag" name="tag" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="explanation">Enter your Explanation</label>
-            <textarea class="form-control" id="explanation" name="explanation" rows="3"></textarea>
           </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

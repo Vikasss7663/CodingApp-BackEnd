@@ -23,25 +23,6 @@ const pool = mySql.createPool({
     database: "heroku_826f5b5f5fe23d8"
 });
 
-app.get('/blog', (req, res) => {
-    pool.getConnection((err,conn) => {
-        if(err) {
-            console.log("Some error occurred");
-            res.send(null);
-            res.end();
-            return;
-        }
-        const sql = "SELECT * FROM blog";
-        conn.query(sql,(err,results,fields) => {
-            if(err) {
-                res.send(null);
-            } else {
-                res.send(results);
-            }
-            res.end();
-        })
-    });
-});
 
 app.get('/problem', (req, res) => {
     pool.getConnection((err,conn) => {
@@ -54,6 +35,25 @@ app.get('/problem', (req, res) => {
         const tag = "%" + req.query.tag + "%";
         const sql = "SELECT * FROM problembase WHERE problemTags LIKE ?";
         conn.query(sql,(tag),(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/allProblem', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const sql = "SELECT * FROM problembase";
+        conn.query(sql,(err,results,fields) => {
             if(err) {
                 res.send(err);
             } else {
@@ -116,6 +116,25 @@ app.get('/code', (req, res) => {
         })
     });
 });
+app.get('/allCode', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const sql = "SELECT * FROM codebase";
+        conn.query(sql,(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
 app.get('/createCode', (req,res) => {
     const filePath = path.join(currPath, "form_code.html");
     res.sendFile(filePath);
@@ -151,97 +170,230 @@ app.post('/createCode', (req, res) => {
     }); 
 });
 
-app.listen(port, () => {
-    console.log("server is listening at port ", port);
+app.get('/blog', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const tag = "%" + req.query.tag + "%";
+        const sql = "SELECT * FROM blog WHERE blogTags LIKE ?";
+        conn.query(sql,tag,(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
 });
-
-
-
-app.get('/createQuestion',(req,res) => {
-    const filePath = path.join(currPath, "form_question.html");
+app.get('/allBlog', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const sql = "SELECT * FROM blog";
+        conn.query(sql,(err,results,fields) => {
+            if(err) {
+                res.send(null);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/createBlog',(req,res) => {
+    const filePath = path.join(currPath, "form_blog.html");
     res.sendFile(filePath);
 });
-app.post('/createQuestion',(req,res) => {
+app.post('/createBlog',(req,res) => {
 
-    const filePath = path.join(currPath, "form_question.html");
+    const filePath = path.join(currPath, "form_blog.html");
 
     insertData = null
 
     insertData = {
-        question : req.body.question,
-        optiona : req.body.optiona,
-        optionb : req.body.optionb,
-        optionc : req.body.optionc,
-        optiond : req.body.optiond,
-        answer : req.body.answer,
-        tags : req.body.tag,
-        explanation : req.body.explanation
+        blogTitle : req.body.title,
+        blogDesc : req.body.detail,
+        blogUrl : req.body.url,
+        blogTags : req.body.tag,
     }
-
-    var tagData = "";
-    var text = insertData.tags.split(",");
-    for(var i=0;i<text.length;i++) {
-        text[i] = text[i].trim().toLowerCase();
-        tagData += "#" + text[i] + " ";
-    }
-    if(tagData.length > 1) insertData.tags = tagData.substring(0,tagData.length-1);
-    else insertData.tags = "default"
 
     pool.getConnection((err,conn) => {
         if(err) {
             console.log(err);
             res.sendFile(filePath);
         }
-        sqlQuery = "insert into question SET ?";
+        sqlQuery = "insert into blog SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
             conn.release;
             if(err) {
                 console.log(err);
             }
-            var questionid = results.insertId
-
-            var quesByTag = []
-            for(var i=0;i<text.length;i++) {
-                quesByTag.push([text[i],questionid]);
-            }
-
-            var tagSql = "insert into quesbytag (tagname,questionid) values ?";
-            conn.query(tagSql , [quesByTag] ,(err,results,fields) => {
-                if(err) {
-                    console.log(err);
-                }
-            });
             res.sendFile(filePath);
         });
     }); 
 }); 
 
-/*
-app.get('/quiz',(req,res) => {
-    pool.getConnection((err,conn) => { 
-        if(err) throw err;
-        var quizSql = "select distinct tagname,count(tagname) as count from quesbytag group by tagname";
-        conn.query(quizSql,(err,results,fields) => {
-            conn.release; 
-            if(err) res.send(null);  
-            else res.send(results);    
-            res.end();   
-        }); 
-    }); 
-}) 
-app.get('/question',(req,res) => {
-    var tag = req.query.tag
-    pool.getConnection((err,conn) => { 
-        if(err) throw err;
-        var quesSql = "select * from question,quesbytag where quesbytag.tagname = ? AND quesbytag.questionid = question.questionid";
-        conn.query(quesSql,tag,(err,results,fields) => {
-            conn.release;  
-            if(err) throw err; 
-            res.send(results);    
-            res.end();   
-        }); 
-    }); 
+app.get('/objQuestion', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const tag = "%" + req.query.tag + "%";
+        const sql = "SELECT * FROM objquestion WHERE questionTags LIKE ?";
+        conn.query(sql,tag,(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
 });
+app.get('/allObjQuestion', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const sql = "SELECT * FROM objquestion";
+        conn.query(sql,(err,results,fields) => {
+            if(err) {
+                res.send(null);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/createObjQuestion',(req,res) => {
+    const filePath = path.join(currPath, "form_obj_question.html");
+    res.sendFile(filePath);
+});
+app.post('/createObjQuestion',(req,res) => {
+
+    const filePath = path.join(currPath, "form_obj_question.html");
+
+    insertData = null
+
+    insertData = {
+        question : req.body.question,
+        optionA : req.body.optiona,
+        optionB : req.body.optionb,
+        optionC : req.body.optionc,
+        optionD : req.body.optiond,
+        answer : Number(req.body.answer),
+        explanation : req.body.explanation,
+        questionTags : req.body.tag,
+    }
+
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log(err);
+            res.sendFile(filePath);
+        }
+        sqlQuery = "insert into objquestion SET ?";
+        conn.query(sqlQuery , insertData ,(err,results,fields) => {
+            conn.release;
+            if(err) {
+                console.log(err);
+            }
+            res.sendFile(filePath);
+        });
+    }); 
+}); 
+
+app.get('/SubQuestion', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const tag = "%" + req.query.tag + "%";
+        const sql = "SELECT * FROM subquestion WHERE questionTags LIKE ?";
+        conn.query(sql,tag,(err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/allSubQuestion', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const sql = "SELECT * FROM subquestion";
+        conn.query(sql,(err,results,fields) => {
+            if(err) {
+                res.send(null);
+            } else {
+                res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/createSubQuestion',(req,res) => {
+    const filePath = path.join(currPath, "form_sub_question.html");
+    res.sendFile(filePath);
+});
+app.post('/createSubQuestion',(req,res) => {
+
+    const filePath = path.join(currPath, "form_sub_question.html");
+
+    insertData = null
+
+    insertData = {
+        question : req.body.question,
+        answer : req.body.answer,
+        questionTags : req.body.tag,
+    }
+
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log(err);
+            res.sendFile(filePath);
+        }
+        sqlQuery = "insert into subquestion SET ?";
+        conn.query(sqlQuery , insertData ,(err,results,fields) => {
+            conn.release;
+            if(err) {
+                console.log(err);
+            }
+            res.sendFile(filePath);
+        });
+    }); 
+}); 
+
+app.listen(port, () => {
+    console.log("server is listening at port ", port);
+});
+
+/*
 
 app.get('/run', (req, res) => {
     const lang = req.query.lang;
