@@ -10,6 +10,8 @@ const currPath = path.join(__dirname);
 
 const port = process.env.PORT || 5500;
 const app = express(); 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -96,6 +98,8 @@ app.post('/createProblem', (req, res) => {
     }); 
 });
 
+const objCode = {codeId: "", problemId: "", codeTitle: "",
+    codeDetail: "", codeCode: "", codeLang: ""}
 app.get('/code', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
@@ -111,6 +115,26 @@ app.get('/code', (req, res) => {
                 res.send(err);
             } else {
                 res.send(results);
+            }
+            res.end();
+        })
+    });
+});
+app.get('/code/:codeId', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        var codeId = req.params.codeId;
+        const sql = "SELECT * FROM codebase WHERE codeId = ?";
+        conn.query(sql, codeId, (err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send(results[0]);
             }
             res.end();
         })
@@ -135,13 +159,36 @@ app.get('/allCode', (req, res) => {
         })
     });
 });
+app.get('/createCode/:codeId', (req, res) => {
+    const filePath = path.join(currPath, "form_code.ejs");
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        var codeId = req.params.codeId;
+        const sql = "SELECT * FROM codebase WHERE codeId = ?";
+        conn.query(sql, codeId, (err,results,fields) => {
+            if(err) {
+                res.send(err);
+                res.end();
+            } else {
+                var firstRow = results[0];
+                if(firstRow == undefined) firstRow = objCode;
+                res.render(filePath, {obj: firstRow});
+            }
+        })
+    });
+});
 app.get('/createCode', (req,res) => {
-    const filePath = path.join(currPath, "form_code.html");
-    res.sendFile(filePath);
+    const filePath = path.join(currPath, "form_code.ejs");
+    res.render(filePath, {obj: objCode});
 });
 app.post('/createCode', (req, res) => {
 
-    const filePath = path.join(currPath, "form_code.html");
+    const filePath = path.join(currPath, "form_code.ejs");
     
     insertData = null
 
@@ -159,15 +206,35 @@ app.post('/createCode', (req, res) => {
             console.log("Some error occurred");
             res.sendFile(filePath);
         }
-        sqlQuery = "insert into codebase SET ?";
+        var sqlQuery = "insert into codebase SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
             conn.release;
             if(err) {
                 console.log("Some error occurred");
             }
-            res.sendFile(filePath);
+            res.render(filePath, {obj: objCode});
         });
     }); 
+});
+app.get('/deleteCode/:codeId', (req, res) => {
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        var codeId = req.params.codeId;
+        const sql = "DELETE FROM codebase WHERE codeId = ?";
+        conn.query(sql, codeId, (err,results,fields) => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send("<h1>Code Deleted successfully.</h1>");
+            }
+            res.end();
+        })
+    });
 });
 
 app.get('/blog', (req, res) => {
@@ -261,7 +328,7 @@ app.get('/objQuestion', (req, res) => {
             res.end();
         })
     });
-});
+}); 
 app.get('/allObjQuestion', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
@@ -387,7 +454,7 @@ app.post('/createSubQuestion',(req,res) => {
             res.sendFile(filePath);
         });
     }); 
-}); 
+});
 
 app.listen(port, () => {
     console.log("server is listening at port ", port);
@@ -486,12 +553,12 @@ function compileCode(lang,userId,s,res) {
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
             console.log(data.toString());
-            res.send(data.toString());
+            res.write(data.toString());
             res.end();
         });
         compile.stderr.on('data', (data) => {
             console.log(data.toString());
-            res.send(data.toString());
+            res.write(data.toString());
             res.end();
             // process.exit();
         });
