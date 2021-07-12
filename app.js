@@ -99,7 +99,8 @@ app.post('/createProblem', (req, res) => {
 });
 
 const objCode = {codeId: "", problemId: "", codeTitle: "",
-    codeDetail: "", codeCode: "", codeLang: ""}
+    codeDetail: "", codeCode: "", codeLang: ""};
+
 app.get('/code', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
@@ -189,7 +190,9 @@ app.get('/createCode', (req,res) => {
 app.post('/createCode', (req, res) => {
 
     const filePath = path.join(currPath, "form_code.ejs");
-    
+    const codeId = Number(req.body.codeid);
+    const type = req.body.submit;
+
     insertData = null
 
     insertData = {
@@ -206,35 +209,38 @@ app.post('/createCode', (req, res) => {
             console.log("Some error occurred");
             res.sendFile(filePath);
         }
-        var sqlQuery = "insert into codebase SET ?";
-        conn.query(sqlQuery , insertData ,(err,results,fields) => {
-            conn.release;
-            if(err) {
-                console.log("Some error occurred");
-            }
-            res.render(filePath, {obj: objCode});
-        });
-    }); 
-});
-app.get('/deleteCode/:codeId', (req, res) => {
-    pool.getConnection((err,conn) => {
-        if(err) {
-            console.log("Some error occurred");
-            res.send(null);
-            res.end();
-            return;
+        if(type == "delete") {
+            console.log("Delete");
+            const sql = "DELETE FROM codebase WHERE codeId = ?";
+            conn.query(sql, codeId, (err,results,fields) => {
+                conn.release;
+                if(err) {
+                    console.log("Some error occurred");
+                }
+                res.render(filePath, {obj: objCode});
+            });
+        } else if(type == "update") {
+            console.log("Update");
+            const sqlQuery = "UPDATE codebase SET ? WHERE codeId = ?";
+            conn.query(sqlQuery, [insertData, codeId], (err,results,fields) => {
+                conn.release;
+                if(err) {
+                    console.log("Some error occurred");
+                }
+                res.render(filePath, {obj: objCode});
+            });
+        } else {
+            console.log("Insert");
+            const sqlQuery = "insert into codebase SET ?";
+            conn.query(sqlQuery , insertData ,(err,results,fields) => {
+                conn.release;
+                if(err) {
+                    console.log("Some error occurred");
+                }
+                res.render(filePath, {obj: objCode});
+            });
         }
-        var codeId = req.params.codeId;
-        const sql = "DELETE FROM codebase WHERE codeId = ?";
-        conn.query(sql, codeId, (err,results,fields) => {
-            if(err) {
-                res.send(err);
-            } else {
-                res.send("<h1>Code Deleted successfully.</h1>");
-            }
-            res.end();
-        })
-    });
+    }); 
 });
 
 app.get('/blog', (req, res) => {

@@ -49,8 +49,18 @@
             <label for="lang">Enter language</label>
             <textarea class="form-control" id="lang" name="lang" rows="1"><%= obj.codeLang %></textarea>
          </div> 
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+        
+         <div class="row mx-auto">
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="delete">Delete</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="update">Update</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary"
+              name="submit" value="create">Create</button></div>
+         </div> 
+         <br/>
+        
+    </form>
 
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
