@@ -101,6 +101,10 @@ app.post('/createProblem', (req, res) => {
 const objCode = {codeId: "", problemId: "", codeTitle: "",
     codeDetail: "", codeCode: "", codeLang: ""};
 
+const objObjQuestion = {questionId: "", question: "", optionA: "",
+    optionB: "",optionC: "",optionD: "",
+    answer: "", questionTags: "", explanation: ""};
+
 app.get('/code', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
@@ -355,16 +359,17 @@ app.get('/allObjQuestion', (req, res) => {
     });
 });
 app.get('/createObjQuestion',(req,res) => {
-    const filePath = path.join(currPath, "form_obj_question.html");
-    res.sendFile(filePath);
+    const filePath = path.join(currPath, "form_obj_question.ejs");
+    res.render(filePath, {obj: objObjQuestion});
 });
 app.post('/createObjQuestion',(req,res) => {
 
-    const filePath = path.join(currPath, "form_obj_question.html");
+    const filePath = path.join(currPath, "form_obj_question.ejs");
 
     insertData = null
 
     insertData = {
+        questionId : Number(req.body.questionid),
         question : req.body.question,
         optionA : req.body.optiona,
         optionB : req.body.optionb,
@@ -378,7 +383,7 @@ app.post('/createObjQuestion',(req,res) => {
     pool.getConnection((err,conn) => {
         if(err) {
             console.log(err);
-            res.sendFile(filePath);
+            res.render(filePath, {obj: objObjQuestion});
         }
         sqlQuery = "insert into objquestion SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
@@ -386,7 +391,7 @@ app.post('/createObjQuestion',(req,res) => {
             if(err) {
                 console.log(err);
             }
-            res.sendFile(filePath);
+            res.render(filePath, {obj: objObjQuestion});
         });
     }); 
 }); 

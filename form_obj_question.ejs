@@ -25,29 +25,33 @@
   </nav>
 
     <form class="card container my-2 col-md-12 col-lg-6" action='/createObjQuestion' method="POST">
-        <div class="form-group">
+      <div class="form-group">
+          <label for="questionid">Enter questionid</label>
+          <textarea class="form-control" id="questionid" name="questionid" rows="1"><%= obj.questionId %></textarea>
+        </div>  
+      <div class="form-group">
             <label for="question">Enter your Question here<span class="text-primary"> *</span></label>
-            <textarea class="form-control" id="question" name="question" rows="3"></textarea>
+            <textarea class="form-control" id="question" name="question" rows="3"><%= obj.question %></textarea>
           </div>
         <div class="form-group">
           <label for="optiona">Option A<span class="text-primary"> *</span></label>
-          <input type="text" class="form-control" name="optiona" id="optiona" placeholder="Option A">
+          <textarea class="form-control" id="optiona" name="optiona" rows="3" placeholder="Option A"><%= obj.optionA %></textarea>
         </div>
         <div class="form-group">
             <label for="optionb">Option B<span class="text-primary"> *</span></label>
-            <input type="text" class="form-control" name="optionb" id="optionb" placeholder="Option B">
+            <textarea class="form-control" id="optionb" name="optionb" rows="3" placeholder="Option B"><%= obj.optionB %></textarea>
           </div>
           <div class="form-group">
             <label for="optionc">Option C</label>
-            <input type="text" class="form-control" id="optionc" name="optionc" placeholder="Option C">
+            <textarea class="form-control" id="optionc" name="optionc" rows="3" placeholder="Option C"><%= obj.optionC %></textarea>
           </div>
           <div class="form-group">
             <label for="optiond">Option D</label>
-            <input type="text" class="form-control" id="optiond" name="optiond" placeholder="Option D">
+            <textarea class="form-control" id="optiond" name="optiond" rows="3" placeholder="Option D"><%= obj.optionD %></textarea>
           </div>
         <div class="form-group">
             <label for="answer">Correct Answer<span class="text-primary"> *</span></label>
-            <select class="form-control" id="answer" name="answer">
+            <select class="form-control" id="answer" name="answer" value=2>
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -56,11 +60,11 @@
           </div>
           <div class="form-group">
             <label for="tag">Enter Tag</label>
-            <textarea class="form-control" id="tag" name="tag" rows="1"></textarea>
+            <textarea class="form-control" id="tag" name="tag" rows="1"><%= obj.questionTags %></textarea>
           </div>
           <div class="form-group">
             <label for="explanation">Enter your Explanation</label>
-            <textarea class="form-control" id="explanation" name="explanation" rows="3"></textarea>
+            <textarea class="form-control" id="explanation" name="explanation" rows="3"><%= obj.explanation %></textarea>
           </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
