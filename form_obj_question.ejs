@@ -31,31 +31,35 @@
         </div>  
       <div class="form-group">
             <label for="question">Enter your Question here<span class="text-primary"> *</span></label>
-            <textarea class="form-control" id="question" name="question" rows="3"><%= obj.question %></textarea>
+            <textarea class="form-control" id="question" name="question" rows="10"><%= obj.question %></textarea>
           </div>
         <div class="form-group">
           <label for="optiona">Option A<span class="text-primary"> *</span></label>
-          <textarea class="form-control" id="optiona" name="optiona" rows="3" placeholder="Option A"><%= obj.optionA %></textarea>
+          <textarea class="form-control" id="optiona" name="optiona" rows="5" placeholder="Option A"><%= obj.optionA %></textarea>
         </div>
         <div class="form-group">
             <label for="optionb">Option B<span class="text-primary"> *</span></label>
-            <textarea class="form-control" id="optionb" name="optionb" rows="3" placeholder="Option B"><%= obj.optionB %></textarea>
+            <textarea class="form-control" id="optionb" name="optionb" rows="5" placeholder="Option B"><%= obj.optionB %></textarea>
           </div>
           <div class="form-group">
             <label for="optionc">Option C</label>
-            <textarea class="form-control" id="optionc" name="optionc" rows="3" placeholder="Option C"><%= obj.optionC %></textarea>
+            <textarea class="form-control" id="optionc" name="optionc" rows="5" placeholder="Option C"><%= obj.optionC %></textarea>
           </div>
           <div class="form-group">
             <label for="optiond">Option D</label>
-            <textarea class="form-control" id="optiond" name="optiond" rows="3" placeholder="Option D"><%= obj.optionD %></textarea>
+            <textarea class="form-control" id="optiond" name="optiond" rows="5" placeholder="Option D"><%= obj.optionD %></textarea>
           </div>
         <div class="form-group">
             <label for="answer">Correct Answer<span class="text-primary"> *</span></label>
-            <select class="form-control" id="answer" name="answer" value=2>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
+            <select class="form-control" id="answer" name="answer" value="2">
+              <%
+              var options = [ "1", "2", "3", "4"];
+              for ( var i = 0; i < options.length; i++ )
+              {
+                  var selected = ( obj.answer == i ) ? "selected" : "";
+                  %><option value="<%=options[ i ] %>" <%=selected %>><%=i %></option><%
+              }
+              %>
             </select>
           </div>
           <div class="form-group">
@@ -64,9 +68,19 @@
           </div>
           <div class="form-group">
             <label for="explanation">Enter your Explanation</label>
-            <textarea class="form-control" id="explanation" name="explanation" rows="3"><%= obj.explanation %></textarea>
+            <textarea class="form-control" id="explanation" name="explanation" rows="5"><%= obj.explanation %></textarea>
           </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        
+          <div class="row mx-auto">
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="delete">Delete</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="update">Update</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary"
+              name="submit" value="create">Create</button></div>
+         </div> 
+         <br/>
+         
       </form>
 
 
