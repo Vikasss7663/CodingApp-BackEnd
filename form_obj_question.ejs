@@ -57,7 +57,7 @@
               for ( var i = 0; i < options.length; i++ )
               {
                   var selected = ( obj.answer == options[i] ) ? "selected" : "";
-                  %><option value="<%=options[i] %>" <%=selected %>><%= i %></option><%
+                  %><option value="<%=options[i] %>" <%=selected %>><%= options[i] %></option><%
               }
               %>
             </select>
