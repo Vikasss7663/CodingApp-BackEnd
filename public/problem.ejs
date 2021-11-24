@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <%- include('partials/head.ejs'); %>
+
+    <title>Code Learning App</title>
+
+  </head>
+  <body>
+
+    <%- include('partials/header.ejs'); %>
+
+    <div class="container my-4">
+
+        <ul class="list-group">
+
+            <% let count = 1; %>
+            <% for (var i = 0 ; i < problems.length ; i++) { %>
+
+                <a href="/public/code?problemId=<%=problems[i].problemId%>" class="list-group-item list-group-item-action">
+                
+                    <span><strong> <%= count %>. </strong><%- problems[i].problemTitle
+                        .replace(new RegExp("<", 'g'), "&lt;")
+                        .replace(new RegExp("\n", 'g'), "<br>")
+                        .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+                        
+                    <span>
+
+                    <% var match = problems[i].problemTags.split(',') %>
+
+                    <%  for (var a in match) {
+                        if(match[a].trim().length == 0) continue;
+                        %>
+
+                        <span style="float:right;" class="badge bg-light text-info mx-1">
+                          <%= match[a].trim() %>
+                        </span>
+
+                    <%  } %>
+
+                </a>
+
+            <% count++; } %>
+
+
+        </ul>
+
+    </div>
+
+
+    <%- include('partials/footer.ejs'); %>
+
+
+  </body>
+
+  </html>

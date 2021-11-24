@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <%- include('partials/head.ejs'); %>
+
+    <title>Code Learning App</title>
+
+  </head>
+  <body>
+
+    <%- include('partials/header.ejs', { subQuestion: 'active', subQuestionOpen: 'disabled'}); %>
+
+    <div class="container my-4">
+      <div class="card">
+        <!-- <div class="card-header">
+          Learn to Code
+        </div> -->
+        <div class="card-body">
+          <h5 class="card-title">Subjective Questions</h5>
+          <p class="card-text">Prepare for your upcoming test.</p>
+          <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion accordion-flush container" id="accordionFlushExample">
+      
+      <% let count = 1; %>
+      <% for (var i = 0 ; i < subQuestions.length ; i++) { %>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingOne<%=i%>">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne<%=i%>" 
+            aria-expanded="false" aria-controls="flush-collapseOne<%=i%>">
+            <span><strong> <%= count %>. </strong><%- subQuestions[i].question
+              .replace(new RegExp("<", 'g'), "&lt;")
+              .replace(new RegExp("\n", 'g'), "<br>")
+              .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+            <span>&nbsp;</span>
+            <span class="badge bg-light text-dark"><%= subQuestions[i].questionTags %></span>
+            </span>
+          </button>
+        </h2>
+        <div id="flush-collapseOne<%=i%>" class="accordion-collapse collapse" aria-labelledby="flush-headingOne<%=i%>" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body"><%- 
+            subQuestions[i].answer
+            .replace(new RegExp("<", 'g'), "&lt;")
+            .replace(new RegExp("\n", 'g'), "<br>")
+            .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %></div>
+        </div>
+      </div>
+      
+      <% count++; } %>
+
+    </div>
+
+    
+    <%- include('partials/footer.ejs'); %>
+
+    <script>
+
+    </script>
+
+  </body>
+</html>
