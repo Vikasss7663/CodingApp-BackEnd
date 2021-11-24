@@ -114,11 +114,11 @@ app.get('/allProblem', (req, res) => {
     });
 });
 app.get('/createProblem', (req, res) => {
-    const filePath = path.join(currPath, "form_problem.ejs");
+    const filePath = path.join(currPath, "./forms/form_problem.ejs");
     res.render(filePath, {obj: objProblem});
 });
 app.get('/createProblem/:problemId', (req, res) => {
-    const filePath = path.join(currPath, "form_problem.ejs");
+    const filePath = path.join(currPath, "./forms/form_problem.ejs");
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
@@ -142,7 +142,7 @@ app.get('/createProblem/:problemId', (req, res) => {
 });
 app.post('/createProblem', (req, res) => {
 
-    const filePath = path.join(currPath, "form_problem.ejs");
+    const filePath = path.join(currPath, "./forms/form_problem.ejs");
 
     insertData = null
 
@@ -276,7 +276,7 @@ app.get('/allCode', (req, res) => {
     });
 });
 app.get('/createCode/:codeId', (req, res) => {
-    const filePath = path.join(currPath, "form_code.ejs");
+    const filePath = path.join(currPath, "./forms/form_code.ejs");
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
@@ -299,12 +299,12 @@ app.get('/createCode/:codeId', (req, res) => {
     });
 });
 app.get('/createCode', (req,res) => {
-    const filePath = path.join(currPath, "form_code.ejs");
+    const filePath = path.join(currPath, "./forms/form_code.ejs");
     res.render(filePath, {obj: objCode});
 });
 app.post('/createCode', (req, res) => {
 
-    const filePath = path.join(currPath, "form_code.ejs");
+    const filePath = path.join(currPath, "./forms/form_code.ejs");
     const codeId = Number(req.body.codeid);
     const type = req.body.submit;
 
@@ -396,12 +396,12 @@ app.get('/allBlog', (req, res) => {
     });
 });
 app.get('/createBlog',(req,res) => {
-    const filePath = path.join(currPath, "form_blog.html");
-    res.sendFile(filePath);
+    const filePath = path.join(currPath, "./forms/form_blog.ejs");
+    res.render(filePath);
 });
 app.post('/createBlog',(req,res) => {
 
-    const filePath = path.join(currPath, "form_blog.html");
+    const filePath = path.join(currPath, "./forms/form_blog.ejs");
 
     insertData = null
 
@@ -415,7 +415,7 @@ app.post('/createBlog',(req,res) => {
     pool.getConnection((err,conn) => {
         if(err) {
             console.log(err);
-            res.sendFile(filePath);
+            res.render(filePath);
         }
         sqlQuery = "insert into blog SET ?";
         conn.query(sqlQuery , insertData ,(err,results,fields) => {
@@ -423,7 +423,7 @@ app.post('/createBlog',(req,res) => {
             if(err) {
                 console.log(err);
             }
-            res.sendFile(filePath);
+            res.render(filePath);
         });
     }); 
 }); 
@@ -490,11 +490,11 @@ app.get('/allObjQuestion', (req, res) => {
     });
 });
 app.get('/createObjQuestion',(req,res) => {
-    const filePath = path.join(currPath, "form_obj_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_obj_question.ejs");
     res.render(filePath, {obj: objObjQuestion});
 });
 app.get('/createObjQuestion/:questionId', (req, res) => {
-    const filePath = path.join(currPath, "form_obj_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_obj_question.ejs");
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
@@ -518,7 +518,7 @@ app.get('/createObjQuestion/:questionId', (req, res) => {
 });
 app.post('/createObjQuestion',(req,res) => {
 
-    const filePath = path.join(currPath, "form_obj_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_obj_question.ejs");
 
     insertData = null
 
@@ -637,14 +637,14 @@ app.get('/allSubQuestion', (req, res) => {
     });
 });
 app.get('/createSubQuestion',(req,res) => {
-    const filePath = path.join(currPath, "form_sub_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_sub_question.ejs");
     const tempSubQuestion =  objSubQuestion;
     tempSubQuestion.questionIdVisible = "d-none";
     tempSubQuestion.deleteButtonVisible = "d-none";
     res.render(filePath, {obj: tempSubQuestion});
 });
 app.get('/createSubQuestion/:questionId', (req,res) => {
-    const filePath = path.join(currPath, "form_sub_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_sub_question.ejs");
     pool.getConnection((err,conn) => {
         if(err) {
             console.log("Some error occurred");
@@ -670,7 +670,7 @@ app.get('/createSubQuestion/:questionId', (req,res) => {
 });
 app.post('/createSubQuestion',(req,res) => {
 
-    const filePath = path.join(currPath, "form_sub_question.ejs");
+    const filePath = path.join(currPath, "./forms/form_sub_question.ejs");
 
     insertData = null
 
