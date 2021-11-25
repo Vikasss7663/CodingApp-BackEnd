@@ -126,7 +126,7 @@ app.get('/public/problem', (req, res) => {
                 res.send(err);
                 res.end();
             } else {
-                res.render(filePath, {problems: results});
+                res.render(filePath, {problems: results, search: search});
             }
         })
     });
@@ -662,7 +662,7 @@ app.get('/public/subQuestion', (req,res) => {
                 res.send(err);
                 res.end();
             } else {
-                res.render(filePath, {subQuestions: results});
+                res.render(filePath, {subQuestions: results, search: search});
             }
         })
     });

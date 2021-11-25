@@ -38,6 +38,7 @@
               .replace(new RegExp("<", 'g'), "&lt;")
                 .replace(new RegExp("\n", 'g'), "<br>")
                 .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+                
               <% if(search != undefined) { 
                   const firstIndex = subQuestion.toLowerCase().indexOf(search);
                   const lastIndex = firstIndex + search.length; 
