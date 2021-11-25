@@ -33,10 +33,21 @@
         <h2 class="accordion-header" id="flush-headingOne<%=i%>">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne<%=i%>" 
             aria-expanded="false" aria-controls="flush-collapseOne<%=i%>">
-            <span><strong> <%= count %>. </strong><%- subQuestions[i].question
+            <span><strong> <%= count %>. </strong>
+              <% let subQuestion = subQuestions[i].question
               .replace(new RegExp("<", 'g'), "&lt;")
-              .replace(new RegExp("\n", 'g'), "<br>")
-              .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+                .replace(new RegExp("\n", 'g'), "<br>")
+                .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+              <% if(search != undefined) { 
+                  const firstIndex = subQuestion.toLowerCase().indexOf(search);
+                  const lastIndex = firstIndex + search.length; 
+                %>
+                  <%-subQuestion.substring(0,firstIndex)%><span class="text-info"><%-
+                    subQuestion.substring(firstIndex, lastIndex)
+                    %></span><%-subQuestion.substring(lastIndex) %>
+                <% } else { %>
+                  <%- subQuestion %>
+                <% } %>
             <span>&nbsp;</span>
             <span class="badge bg-light text-dark"><%= subQuestions[i].questionTags %></span>
             </span>

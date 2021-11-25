@@ -20,10 +20,22 @@
 
                 <a href="/public/code?problemId=<%=problems[i].problemId%>" class="list-group-item list-group-item-action">
                 
-                    <span><strong> <%= count %>. </strong><%- problems[i].problemTitle
+                    <span><strong> <%= count %>. </strong><%
+                      let problemTitle = problems[i].problemTitle
                         .replace(new RegExp("<", 'g'), "&lt;")
                         .replace(new RegExp("\n", 'g'), "<br>")
                         .replace(new RegExp("\t", 'g'), "&nbsp;&nbsp;&nbsp;&nbsp;"); %>
+
+                      <% if(search != undefined) { 
+                          const firstIndex = problemTitle.toLowerCase().indexOf(search);
+                          const lastIndex = firstIndex + search.length; 
+                        %>
+                          <%-problemTitle.substring(0,firstIndex) %><span class="text-info"><%-
+                            problemTitle.substring(firstIndex, lastIndex)
+                            %></span><%-problemTitle.substring(lastIndex) %>
+                        <% } else { %>
+                          <%- problemTitle %>
+                        <% } %>  
                         
                     <span>
 

@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
     // res.end();
 });
 
-app.post('/search', (req,res) => {
+app.get('/search', (req,res) => {
     const filePath = path.join(currPath, "./public/problem.ejs");
     pool.getConnection((err,conn) => {
         if(err) {
@@ -61,7 +61,7 @@ app.post('/search', (req,res) => {
             res.end();
             return;
         }
-        const search = "%" + req.body.search + "%";
+        const search = "%" + req.query.search + "%";
         console.log(search);
         if(search == undefined) search = "%%";
         const sql = "SELECT * FROM problembase WHERE problemTitle LIKE ?";
@@ -104,6 +104,19 @@ app.get('/public/problem', (req, res) => {
             res.send(null);
             res.end();
             return;
+        }
+        var search = req.query.search;
+        if(search != undefined) {
+            const searchPattern = "%" + search + "%";
+            const sql = "SELECT * FROM problembase WHERE problemTitle LIKE ?";
+            conn.query(sql,searchPattern,(err,results,fields) => {
+                if(err) {
+                    res.send(err);
+                    res.end();
+                } else {
+                    res.render(filePath, {problems: results, search: search});
+                }
+            });
         }
         var tag = "%" + req.query.tag + "%";
         if(req.query.tag == undefined) tag = "%%";
@@ -627,6 +640,19 @@ app.get('/public/subQuestion', (req,res) => {
             res.send(null);
             res.end();
             return;
+        }
+        var search = req.query.search;
+        if(search != undefined) {
+            const searchPattern = "%" + search + "%";
+            const sql = "SELECT * FROM subquestion WHERE question LIKE ?";
+            conn.query(sql,searchPattern,(err,results,fields) => {
+                if(err) {
+                    res.send(err);
+                    res.end();
+                } else {
+                    res.render(filePath, {subQuestions: results, search: search});
+                }
+            });
         }
         var tag = "%" + req.query.tag + "%";
         if(req.query.tag == undefined) tag = "%%";
