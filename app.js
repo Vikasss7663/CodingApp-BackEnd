@@ -52,6 +52,30 @@ app.get('/', (req, res) => {
     // res.end();
 });
 
+app.post('/search', (req,res) => {
+    const filePath = path.join(currPath, "./public/problem.ejs");
+    pool.getConnection((err,conn) => {
+        if(err) {
+            console.log("Some error occurred");
+            res.send(null);
+            res.end();
+            return;
+        }
+        const search = "%" + req.body.search + "%";
+        console.log(search);
+        if(search == undefined) search = "%%";
+        const sql = "SELECT * FROM problembase WHERE problemTitle LIKE ?";
+        conn.query(sql,search,(err,results,fields) => {
+            if(err) {
+                res.send(err);
+                res.end();
+            } else {
+                res.render(filePath, {problems: results});
+            }
+        })
+    });
+});
+
 app.get('/problem', (req, res) => {
     pool.getConnection((err,conn) => {
         if(err) {
