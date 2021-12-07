@@ -2,11 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mySql = require('mysql');
 const fs = require('fs'); 
-const {exec, spawn} = require('child_process')
+const {spawn} = require('child_process')
 require('process');
 const stream = require('stream');
 const path = require('path');
-const { Compiler } = require('webpack');
 const currPath = path.join(__dirname);
 
 const port = process.env.PORT || 5500;
