@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// const basePath = "public/code";
+const basePath = "public/code";
 
 const pool = mySql.createPool({
     host: "us-cdbr-east-04.cleardb.com", 
@@ -783,7 +783,7 @@ app.post('/run', (req, res) => {
     const code = req.body.code;
     const input = req.body.input;
     const ext = getExtension(lang);
-    const fileName = basePath+"/test_file/"+userId+ext;
+    const fileName = basePath+"/python/"+userId+ext;
     try {
         fs.writeFileSync(fileName, code);
         //file written successfully
@@ -863,7 +863,7 @@ function compileCode(lang,userId,s,res) {
             // process.exit();
         });
     } else if(lang == "Python") {
-        const fileName = basePath+"/test_file/"+userId+".py";
+        const fileName = basePath+"/python/"+userId+".py";
         const compile = spawn(`python3 ${fileName}`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
