@@ -6,6 +6,7 @@ const {exec, spawn} = require('child_process')
 require('process');
 const stream = require('stream');
 const path = require('path');
+const { Compiler } = require('webpack');
 const currPath = path.join(__dirname);
 
 const port = process.env.PORT || 5500;
@@ -867,15 +868,16 @@ function compileCode(lang,userId,s,res) {
         const compile = spawn(`python3 ${fileName}`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
-            console.log(data.toString());
             res.write(data.toString());
-            res.end();
+            // res.end();
         });
         compile.stderr.on('data', (data) => {
-            console.log(data.toString());
             res.write(data.toString());
             res.end();
             // process.exit();
+        });
+        compile.on('exit', function() {
+            res.end();
         });
     }
 }
