@@ -783,11 +783,11 @@ app.post('/run', (req, res) => {
     const code = req.body.code;
     const input = req.body.input;
     const ext = getExtension(lang);
-    const fileName = basePath+"/python/"+userId+ext;
+    const fileName = basePath+"/"+userId+ext;
     try {
         fs.writeFileSync(fileName, code);
         //file written successfully
-        console.log("File written" + fileName);
+        console.log("File written as " + fileName);
         var Readable = stream.Readable;
         var s = new Readable() // for input
         s.push(input)
@@ -815,8 +815,8 @@ function getExtension(lang) {
 
 function compileCode(lang,userId,s,res) {
     if(lang == "C") {
-        const fileName = path.join(basePath, "hello"+userId+".c");
-        const outputFileName = path.join(basePath, "output"+userId);
+        const fileName = path.join(basePath, "/"+userId+".c");
+        const outputFileName = path.join(basePath, "/"+userId);
         const compile = spawn(`gcc ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
@@ -832,8 +832,8 @@ function compileCode(lang,userId,s,res) {
             return;
         });
     } else if(lang == "C++") {
-        const fileName = basePath+"/hello"+userId+".cpp";
-        const outputFileName = basePath+"/output"+userId;
+        const fileName = path.join(basePath,"/"+userId+".cpp");
+        const outputFileName = path.join(basePath, "/"+userId);
         const compile = spawn(`g++ ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
@@ -847,8 +847,8 @@ function compileCode(lang,userId,s,res) {
             res.end();
         });
     } else if(lang == "Java") {
-        const fileName = basePath+"/hello"+userId+".java";
-        const outputFileName = basePath+"/hello"+userId;
+        const fileName = basePath+"/"+userId+".java";
+        const outputFileName = path.join(basePath, "/"+userId);
         const compile = spawn(`javac ${fileName} && java ${outputFileName}`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
@@ -863,7 +863,7 @@ function compileCode(lang,userId,s,res) {
             // process.exit();
         });
     } else if(lang == "Python") {
-        const fileName = basePath+"/python/"+userId+".py";
+        const fileName = path.join(basePath, "/"+userId+".py");
         const compile = spawn(`python3 ${fileName}`,{shell: true});
         s.pipe(compile.stdin);
         compile.stdout.on('data', (data) => {
