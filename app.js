@@ -777,107 +777,105 @@ app.listen(port, () => {
     console.log("Server is listening at port ", port);
 });
 
-// app.post('/run', (req, res) => {
-//     const lang = req.body.lang;
-//     const userId = req.body.userId;
-//     const code = req.body.code;
-//     console.log(code);
-//     const input = req.body.input;
-//     const ext = getExtension(lang);
-//     const fileName = basePath+"/hello"+userId+ext;
-//     try {
-//         fs.writeFileSync(fileName, code);
-//         //file written successfully
-//         console.log("File written" + fileName);
-//         var Readable = stream.Readable;
-//         var s = new Readable() // for input
-//         s.push(input)
-//         s.push(null)
-//         compileCode(lang,userId,s,res);
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
+app.post('/run', (req, res) => {
+    const lang = req.body.lang;
+    const userId = req.body.userId;
+    const code = req.body.code;
+    const input = req.body.input;
+    const ext = getExtension(lang);
+    const fileName = basePath+"/test_file/"+userId+ext;
+    try {
+        fs.writeFileSync(fileName, code);
+        //file written successfully
+        console.log("File written" + fileName);
+        var Readable = stream.Readable;
+        var s = new Readable() // for input
+        s.push(input)
+        s.push(null)
+        compileCode(lang,userId,s,res);
+    } catch (err) {
+        console.log(err)
+    }
+});
 
-// function getExtension(lang) {
-//     switch(lang) {
-//         case "C":
-//             return ".c";
-//         case "C++":
-//             return ".cpp";    
-//         case "Java":
-//             return ".java";
-//         case "Python":
-//             return ".py";
-//         default:
-//             return ".c";
-//     }
-// }
+function getExtension(lang) {
+    switch(lang) {
+        case "C":
+            return ".c";
+        case "C++":
+            return ".cpp";    
+        case "Java":
+            return ".java";
+        case "Python":
+            return ".py";
+        default:
+            return ".c";
+    }
+}
 
-// function compileCode(lang,userId,s,res) {
-//     if(lang == "C") {
-//         const fileName = path.join(basePath, "hello"+userId+".c");
-//         const outputFileName = path.join(basePath, "output"+userId);
-//         const compile = spawn(`gcc ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
-//         s.pipe(compile.stdin);
-//         compile.stdout.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//             return;
-//         });
-//         compile.stderr.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//             return;
-//         });
-//     } else if(lang == "C++") {
-//         const fileName = basePath+"/hello"+userId+".cpp";
-//         const outputFileName = basePath+"/output"+userId;
-//         const compile = spawn(`g++ ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
-//         s.pipe(compile.stdin);
-//         compile.stdout.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//         });
-//         compile.stderr.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//         });
-//     } else if(lang == "Java") {
-//         const fileName = basePath+"/hello"+userId+".java";
-//         const outputFileName = basePath+"/hello"+userId;
-//         const compile = spawn(`javac ${fileName} && java ${outputFileName}`,{shell: true});
-//         s.pipe(compile.stdin);
-//         compile.stdout.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//         });
-//         compile.stderr.on('data', (data) => {
-//             console.log(data.toString());
-//             res.send(data.toString());
-//             res.end();
-//             // process.exit();
-//         });
-//     } else if(lang == "Python") {
-//         const fileName = basePath+"/hello"+userId+".py";
-//         const outputFileName = basePath+"/hello"+userId;
-//         const compile = spawn(`python3 ${fileName}`,{shell: true});
-//         s.pipe(compile.stdin);
-//         compile.stdout.on('data', (data) => {
-//             console.log(data.toString());
-//             res.write(data.toString());
-//             res.end();
-//         });
-//         compile.stderr.on('data', (data) => {
-//             console.log(data.toString());
-//             res.write(data.toString());
-//             res.end();
-//             // process.exit();
-//         });
-//     }
-// }
+function compileCode(lang,userId,s,res) {
+    if(lang == "C") {
+        const fileName = path.join(basePath, "hello"+userId+".c");
+        const outputFileName = path.join(basePath, "output"+userId);
+        const compile = spawn(`gcc ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
+        s.pipe(compile.stdin);
+        compile.stdout.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+            return;
+        });
+        compile.stderr.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+            return;
+        });
+    } else if(lang == "C++") {
+        const fileName = basePath+"/hello"+userId+".cpp";
+        const outputFileName = basePath+"/output"+userId;
+        const compile = spawn(`g++ ${fileName} -o ${outputFileName} && ${outputFileName}.exe`,{shell: true});
+        s.pipe(compile.stdin);
+        compile.stdout.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+        });
+        compile.stderr.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+        });
+    } else if(lang == "Java") {
+        const fileName = basePath+"/hello"+userId+".java";
+        const outputFileName = basePath+"/hello"+userId;
+        const compile = spawn(`javac ${fileName} && java ${outputFileName}`,{shell: true});
+        s.pipe(compile.stdin);
+        compile.stdout.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+        });
+        compile.stderr.on('data', (data) => {
+            console.log(data.toString());
+            res.send(data.toString());
+            res.end();
+            // process.exit();
+        });
+    } else if(lang == "Python") {
+        const fileName = basePath+"/test_file/"+userId+".py";
+        const compile = spawn(`python3 ${fileName}`,{shell: true});
+        s.pipe(compile.stdin);
+        compile.stdout.on('data', (data) => {
+            console.log(data.toString());
+            res.write(data.toString());
+            res.end();
+        });
+        compile.stderr.on('data', (data) => {
+            console.log(data.toString());
+            res.write(data.toString());
+            res.end();
+            // process.exit();
+        });
+    }
+}
