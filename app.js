@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const mySql = require('mysql');
@@ -18,11 +19,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const basePath = "public/code";
 
 const pool = mySql.createPool({
-    host: "us-cdbr-east-04.cleardb.com", 
-    port: 3306,
-    user: "b8391d809cc951",
-    password: "9e0c987c",
-    database: "heroku_826f5b5f5fe23d8"
+    host: process.env.HOST, 
+    port: process.env.PORT,
+    user: process.env.USER_NAME,
+    password: process.env.USER_PASSWORD,
+    database: process.env.USER_DATABASE
 });
 
 const objCode = {codeId: "", problemId: "", codeTitle: "",

@@ -1,1 +1,20 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
 node_modules/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional static build directory
+public/
+
+# Environment files
+.env
+
+# IDE files
+.idea/
+.vscode/
