@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../public/partials/head.ejs'); %>  
+</head>
+<body>
+
+
+  <%- include('../public/partials/header.ejs'); %>  
+
+
+    <form class="card container my-2 col-md-12 col-lg-6" action='/createSubQuestion' method="POST">
+          <div class="form-group <%=obj.questionIdVisible%>">
+            <label for="questionid">Enter questionid</label>
+            <textarea class="form-control" id="questionid" name="questionid" rows="1"><%= obj.questionId %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="question">Enter your Question here<span class="text-primary"> *</span></label>
+            <textarea class="form-control" id="question" name="question" rows="1"><%= obj.question %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="answer">Enter your Explanation</label>
+            <textarea class="form-control" id="answer" name="answer" rows="3"><%= obj.answer %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="tag">Enter Tag</label>
+            <textarea class="form-control" id="tag" name="tag" rows="1"><%= obj.questionTags %></textarea>
+            <br/>
+          </div>
+
+          <div class="row mx-auto">
+            <div class="col  <%=obj.deleteButtonVisible%>"><button type="submit" class="btn btn-primary" 
+              name="submit" value="delete">Delete</button></div>
+            <div class="col  <%=obj.deleteButtonVisible%>"><button type="submit" class="btn btn-primary" 
+              name="submit" value="update">Update</button></div>
+            <div class="col  <%=obj.createButtonVisible%>"><button type="submit" class="btn btn-primary"
+              name="submit" value="create">Create</button></div>
+          </div> 
+         <br/>
+         
+      </form>
+
+
+      <%- include('../public/partials/footer.ejs'); %>  
+
+
+    
+</body>
+</html>

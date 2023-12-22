@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs'); %>
+</head>
+<body>
+
+    <%- include('../partials/header.ejs'); %>
+
+    <form class="card container my-2 col-md-12 col-lg-6" action='/code/createCode' method="POST">
+        <div class="form-group">
+            <label for="codeid">Enter codeid</label>
+            <textarea class="form-control" id="codeid" name="codeid" rows="1"><%= obj.codeId %></textarea>
+          </div>
+        <div class="form-group">
+            <label for="problemid">Enter problemid</label>
+            <textarea class="form-control" id="problemid" name="problemid" rows="1"><%= obj.problemId %></textarea>
+          </div> 
+        <div class="form-group">
+            <label for="title">Enter title<span class="text-primary"> *</span></label>
+            <textarea class="form-control" id="title" name="title" rows="3"><%= obj.codeTitle %></textarea>
+          </div>
+        <div class="form-group">
+            <label for="detail">Enter detail</label>
+            <textarea class="form-control" id="detail" name="detail" rows="3"><%= obj.codeDetail %></textarea>
+         </div>
+        <div class="form-group">
+            <label for="code">Enter Code</label>
+            <textarea class="form-control" id="code" name="code" rows="8"><%= obj.codeCode %></textarea>
+         </div>
+        <div class="form-group">
+            <label for="lang">Enter language</label>
+            <textarea class="form-control" id="lang" name="lang" rows="1"><%= obj.codeLang %></textarea>
+            <br/>
+          </div> 
+        
+         <div class="row mx-auto">
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="delete">Delete</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="update">Update</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary"
+              name="submit" value="create">Create</button></div>
+         </div> 
+         <br/>
+        
+    </form>
+
+    <%- include('../partials/footer.ejs'); %>
+    
+</body>
+</html>

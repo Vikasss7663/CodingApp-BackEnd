@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../public/partials/head.ejs'); %>
+</head>
+<body>
+
+
+  <%- include('../public/partials/header.ejs'); %>
+
+    <form class="card container my-2 col-md-12 col-lg-6" action='/createObjQuestion' method="POST">
+      <div class="form-group">
+          <label for="questionid">Enter questionid</label>
+          <textarea class="form-control" id="questionid" name="questionid" rows="1"><%= obj.questionId %></textarea>
+        </div>  
+      <div class="form-group">
+            <label for="question">Enter your Question here<span class="text-primary"> *</span></label>
+            <textarea class="form-control" id="question" name="question" rows="10"><%= obj.question %></textarea>
+          </div>
+        <div class="form-group">
+          <label for="optiona">Option A<span class="text-primary"> *</span></label>
+          <textarea class="form-control" id="optiona" name="optiona" rows="5" placeholder="Option A"><%= obj.optionA %></textarea>
+        </div>
+        <div class="form-group">
+            <label for="optionb">Option B<span class="text-primary"> *</span></label>
+            <textarea class="form-control" id="optionb" name="optionb" rows="5" placeholder="Option B"><%= obj.optionB %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="optionc">Option C</label>
+            <textarea class="form-control" id="optionc" name="optionc" rows="5" placeholder="Option C"><%= obj.optionC %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="optiond">Option D</label>
+            <textarea class="form-control" id="optiond" name="optiond" rows="5" placeholder="Option D"><%= obj.optionD %></textarea>
+          </div>
+        <div class="form-group">
+            <label for="answer">Correct Answer<span class="text-primary"> *</span></label>
+            <select class="form-control" id="answer" name="answer" value="2">
+              <%
+              var options = [ "1", "2", "3", "4"];
+              for ( var i = 0; i < options.length; i++ )
+              {
+                  var selected = ( obj.answer == options[i] ) ? "selected" : "";
+                  %><option value="<%=options[i] %>" <%=selected %>><%= options[i] %></option><%
+              }
+              %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tag">Enter Tag</label>
+            <textarea class="form-control" id="tag" name="tag" rows="1"><%= obj.questionTags %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="explanation">Enter your Explanation</label>
+            <textarea class="form-control" id="explanation" name="explanation" rows="5"><%= obj.explanation %></textarea>
+            <br/>
+          </div>
+        
+          <div class="row mx-auto">
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="delete">Delete</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary" 
+              name="submit" value="update">Update</button></div>
+            <div class="col"><button type="submit" class="btn btn-primary"
+              name="submit" value="create">Create</button></div>
+         </div> 
+         <br/>
+         
+      </form>
+
+
+      <%- include('../public/partials/footer.ejs'); %>
+    
+</body>
+</html>
