@@ -14,6 +14,7 @@
     "firebase": "^10.7.1",
     "mongodb": "^3.6.9",
     "mysql": "^2.18.1",
+    "node-cache": "^5.1.2",
     "path-to-regexp": "^6.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",

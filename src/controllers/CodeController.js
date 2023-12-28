@@ -8,26 +8,39 @@ const codeRef = child(dbRef, 'Codes');
 const router = express.Router();
 const currPath = dirname(new URL(import.meta.url).pathname);
 
-const codeModel = new CodeModel();
+const defaultCodeModel = new CodeModel();
 
-router.get('/code', async (req, res) => {
+router.get('', async (req, res) => {
+    const problemId = req.query.problemId;
+    const codeId = req.query.codeId;
+
     try {
-        const problemId = Number(req.query.problemId);
+        if(!isNaN(problemId)) {
+            // Query Firebase Realtime Database to get all codes for a specific problemId
+            const codeQuery = query(
+                codeRef,
+                orderByChild('problemId'),
+                equalTo(Number(problemId))
+            );
 
-        // Query Firebase Realtime Database to get all codes for a specific problemId
-        const codeQuery = query(
-            codeRef,
-            orderByChild('problemId'),
-            equalTo(problemId)
-        );
-
-        const snapshot = await get(codeQuery);
-
-        if (snapshot.exists()) {
-            const codeData = snapshot.val();
-            res.send(codeData);
+            const snapshot = await get(codeQuery);
+            if (snapshot.exists()) {
+                const codeData = snapshot.val();
+                res.send(codeData);
+            } else {
+                res.send([]);
+            }
+        } else if(!isNaN(codeId)) {
+            const dataRef = child(codeRef, codeId);
+            const snapshot = await get(dataRef);
+            if (snapshot.exists()) {
+                const codeData = snapshot.val();
+                res.send(codeData);
+            } else {
+                res.send("Code not found");
+            }
         } else {
-            res.send([]);
+            res.send("Please provide code id or problem id as query parameter.");
         }
     } catch (error) {
         console.error('Error occurred:', error);
@@ -37,7 +50,7 @@ router.get('/code', async (req, res) => {
     }
 });
 
-router.get('/public', async (req, res) => {
+router.get('/view', async (req, res) => {
     const filePath = join(currPath, "../views/code.ejs");
     try {
         let problemId = Number(req.query.problemId);
@@ -70,28 +83,7 @@ router.get('/public', async (req, res) => {
     }
 });
 
-router.get('/code/:codeId', async (req, res) => {
-    try {
-        const codeId = req.params.codeId;
-    
-        const dataRef = child(codeRef, codeId);
-        const snapshot = await get(dataRef);
-    
-        if (snapshot.exists()) {
-            const codeData = snapshot.val();
-            res.send(codeData);
-        } else {
-            res.send("Code not found");
-        }
-    } catch (error) {
-        console.error("Some error occurred", error);
-        res.send(null);
-    } finally {
-        res.end();
-    }
-});
-
-router.get('/allCode', async (req, res) => {
+router.get('/all', async (req, res) => {
     try {
         const snapshot = await get(codeRef);
     
@@ -109,10 +101,10 @@ router.get('/allCode', async (req, res) => {
       }
 });
 
-router.get('/createCode/:codeId', async (req, res) => {
+router.get('/create/:codeId', async (req, res) => {
     const filePath = join(currPath, "../views/form/form_code.ejs");
     const codeId = req.params.codeId;
-    
+
     try {
         const dataRef = child(codeRef, codeId);
         const snapshot = await get(dataRef);
@@ -121,7 +113,7 @@ router.get('/createCode/:codeId', async (req, res) => {
           const codeData = snapshot.val();
           res.render(filePath, { obj: codeData });
         } else {
-          res.render(filePath, { obj: codeModel });
+          res.render(filePath, { obj: defaultCodeModel });
         }
       } catch (error) {
         console.error('Error occurred:', error);
@@ -129,18 +121,18 @@ router.get('/createCode/:codeId', async (req, res) => {
       }
 });
 
-router.get('/createCode', (req,res) => {
+router.get('/create', (req,res) => {
     const filePath = join(currPath, "../views/form/form_code.ejs");
-    res.render(filePath, {obj: new CodeModel()});
+    res.render(filePath, {obj: defaultCodeModel});
 });
 
-router.post('/createCode', (req, res) => {
+router.post('/create', (req, res) => {
 
     const filePath = join(currPath, "../views/form/form_code.ejs");
     const codeId = req.body.codeid;
     const type = req.body.submit;
 
-    codeModel = new CodeModel(
+    const codeModel = new CodeModel(
         Number(codeId),
         Number(req.body.problemid),
         req.body.title,
@@ -155,11 +147,11 @@ router.post('/createCode', (req, res) => {
     // Check if the data exists
     if (type === 'update') {
         // Update existing code
-        update(dataRef, insertData).then(() => {
+        update(dataRef, codeModel).then(() => {
             res.render(filePath, { obj: codeModel });
         }).catch((err) => {
             console.log("Some error occurred", err);
-            res.render(filePath, { obj: codeModel });
+            res.render(filePath, { obj: defaultCodeModel });
         });
     } else if (type === 'delete') {
         // Delete existing code
@@ -167,50 +159,50 @@ router.post('/createCode', (req, res) => {
             res.render(filePath, { obj: codeModel });
         }).catch((err) => {
             console.log("Some error occurred", err);
-            res.render(filePath, { obj: codeModel });
+            res.render(filePath, { obj: defaultCodeModel });
         });
     } else {
         // Insert new code
-        set(dataRef, insertData).then(() => {
+        set(dataRef, codeModel).then(() => {
             res.render(filePath, { obj: codeModel });
         }).catch((err) => {
             console.log("Some error occurred", err);
-            res.render(filePath, { obj: codeModel });
+            res.render(filePath, { obj: defaultCodeModel });
         });
     }
 });
 
-router.post('/createCode', async (req, res) => {
-    const codeId = req.body.codeid;
-    const type = req.body.submit;
+// router.post('/create', async (req, res) => {
+//     const codeId = req.body.codeid;
+//     const type = req.body.submit;
 
-    const insertData = new CodeModel(
-        Number(codeId),
-        Number(req.body.problemid),
-        req.body.title,
-        req.body.detail,
-        req.body.code,
-        req.body.lang
-    );
+//     const codeModel = new CodeModel(
+//         Number(codeId),
+//         Number(req.body.problemid),
+//         req.body.title,
+//         req.body.detail,
+//         req.body.code,
+//         req.body.lang
+//     );
 
-    const dataRef = child(codeRef, codeId);
+//     const dataRef = child(codeRef, codeId);
 
-    try {
-        if (type === 'update') {
-            await update(dataRef, insertData);
-        } else if (type === 'delete') {
-            await remove(dataRef);
-        } else {
-            await set(dataRef, insertData);
-        }
+//     try {
+//         if (type === 'update') {
+//             await update(dataRef, codeModel);
+//         } else if (type === 'delete') {
+//             await remove(dataRef);
+//         } else {
+//             await set(dataRef, codeModel);
+//         }
 
-        res.render(filePath, { obj: codeModel });
-    } catch (err) {
-        console.log("Some error occurred", err);
-        res.render(filePath, { obj: codeModel });
-    } finally {
-        res.end();
-    }
-});
+//         res.render(filePath, { obj: codeModel });
+//     } catch (err) {
+//         console.log("Some error occurred", err);
+//         res.render(filePath, { obj: defaultCodeModel });
+//     } finally {
+//         res.end();
+//     }
+// });
 
 export default router;

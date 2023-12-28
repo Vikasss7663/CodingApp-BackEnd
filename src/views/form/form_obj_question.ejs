@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('../public/partials/head.ejs'); %>
+  <%- include('../partials/head.ejs'); %>
 </head>
 <body>
 
 
-  <%- include('../public/partials/header.ejs'); %>
+  <%- include('../partials/header.ejs'); %>
 
-    <form class="card container my-2 col-md-12 col-lg-6" action='/createObjQuestion' method="POST">
+    <form class="card container my-2 col-md-12 col-lg-6" action='/obj-question/create' method="POST">
       <div class="form-group">
           <label for="questionid">Enter questionid</label>
           <textarea class="form-control" id="questionid" name="questionid" rows="1"><%= obj.questionId %></textarea>
@@ -69,7 +69,7 @@
       </form>
 
 
-      <%- include('../public/partials/footer.ejs'); %>
+      <%- include('../partials/footer.ejs'); %>
     
 </body>
 </html>

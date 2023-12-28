@@ -7,7 +7,8 @@
 
   <%- include('../partials/header.ejs'); %>  
 
-    <form class="card container my-2 col-md-12 col-lg-6" action='/problem/createProblem' method="POST">
+    <form class="card container my-2 col-md-12 col-lg-6" action='/problem/create' method="POST">
+      
         <div class="form-group">
             <label for="id">Enter id</label>
             <textarea class="form-control" id="id" name="id" rows="1"><%= obj.problemId %></textarea>

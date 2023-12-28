@@ -18,7 +18,7 @@
             <% let count = 1; %>
             <% for (var i = 0 ; i < problems.length ; i++) { %>
 
-                <a href="/public/code?problemId=<%=problems[i].problemId%>" class="list-group-item list-group-item-action">
+                <a href="/code/view?problemId=<%=problems[i].problemId%>" class="list-group-item list-group-item-action">
                 
                     <span><strong> <%= count %>. </strong><%
                       let problemTitle = problems[i].problemTitle

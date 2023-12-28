@@ -1,5 +1,5 @@
 import express from 'express';
-import { child, query, orderByChild, startAt, endAt, equalTo, get, set, update, remove } from "firebase/database";
+import { child, get, set, update, remove } from "firebase/database";
 import { dbRef } from '../../config/firebase-config.js';
 import { join, dirname } from 'path';
 import ProblemModel from "../models/ProblemModel.js";
@@ -10,19 +10,21 @@ const currPath = dirname(new URL(import.meta.url).pathname);
 
 const defaultProblemModel = new ProblemModel();
 
-router.get('/problemByTag', async (req, res) => {
+router.get('', async (req, res) => {
   try {
-    
-      const tag = "%" + req.query.tag + "%";
+      const tag = req.query.tag.toLowerCase();
 
       // Create a query for filtering based on problemTags
-      const tagQuery = query(problemRef, orderByChild('problemTags').startAt(tag).endAt(tag + "\uf8ff"));
+      const tagQuery = await get(problemRef);
 
       // Execute the query
       const snapshot = await get(tagQuery);
 
       if (snapshot.exists()) {
           const problemsData = snapshot.val();
+          problemsData = problemsData.filter(item =>
+            item.toLowerCase().includes(tag)
+          );
           res.send(problemsData);
       } else {
           res.send([]);
@@ -35,7 +37,7 @@ router.get('/problemByTag', async (req, res) => {
   }
 });
 
-router.get('/public', async (req, res) => {
+router.get('/view', async (req, res) => {
   const filePath = join(currPath, "../views/problem.ejs");
   try {
       let snapshot = await get(problemRef);
@@ -71,7 +73,7 @@ router.get('/public', async (req, res) => {
   }
 });
 
-router.get('/allProblem', async (req, res) => {
+router.get('/all', async (req, res) => {
   try {
       const snapshot = await get(problemRef);
 
@@ -89,12 +91,12 @@ router.get('/allProblem', async (req, res) => {
   }
 });
 
-router.get('/createProblem', (req, res) => {
+router.get('/create', (req, res) => {
   const filePath = join(currPath, "../views/form/form_problem.ejs");
   res.render(filePath, {obj: defaultProblemModel});
 });
 
-router.get('/createProblem/:problemId', async (req, res) => {
+router.get('/create/:problemId', async (req, res) => {
   const filePath = join(currPath, "../views/form/form_problem.ejs");
   try {
       const problemId = req.params.problemId;
@@ -115,7 +117,7 @@ router.get('/createProblem/:problemId', async (req, res) => {
   }
 });
 
-router.post('/createProblem', (req, res) => {
+router.post('/create', (req, res) => {
 
   const filePath = join(currPath, "../views/form/form_problem.ejs");
 
