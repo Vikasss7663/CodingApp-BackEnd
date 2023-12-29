@@ -1,0 +1,1 @@
+This folder is used for storing the code. Once code is compiled file will be deleted from here.
